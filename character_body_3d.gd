@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
 @export var mouse_sensitivity: float = 0.009
-@onready var animP = $Zephyr/AnimationPlayer
+@onready var animP = $"../AnimationPlayer"
 const SPEED = 5.0
 const JUMP_VELOCITY = 4.5
 
@@ -46,7 +46,17 @@ func update_animation() -> void:
 		if not animP.is_playing() or animP.current_animation != "anims/jump":
 			animP.play("anims/jump", -1,2.0)
 	elif velocity.length() > 0.1:  # Threshold to switch to walking animation
-		if not animP.is_playing() or animP.current_animation != "anims/walk":
+		if not animP.is_playing() or animP.current_animation != "anims/strafe_left" and Input.is_action_pressed("left"):
+			animP.stop()
+			animP.play("anims/strafe_left")
+		elif not animP.is_playing() or animP.current_animation != "anims/strafe_right" and Input.is_action_pressed("right"):
+			animP.stop()
+			animP.play("anims/strafe_right")
+		elif not animP.is_playing() or animP.current_animation != "anims/walk" and Input.is_action_pressed("forward"):
+			animP.stop()
+			animP.play("anims/walk")
+		elif not animP.is_playing() or animP.current_animation != "anims/walk" and Input.is_action_pressed("backward"):
+			animP.stop()
 			animP.play("anims/walk")
 	else:
 		if not animP.is_playing() or animP.current_animation != "anims/idle":

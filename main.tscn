@@ -1,10 +1,30 @@
-[gd_scene load_steps=19 format=4 uid="uid://c0rl605nbw7yh"]
+[gd_scene load_steps=21 format=4 uid="uid://c0rl605nbw7yh"]
 
 [ext_resource type="Animation" uid="uid://6782yovkfnur" path="res://idle.res" id="1_8w7mx"]
 [ext_resource type="PackedScene" uid="uid://ch3hvmt7os3r7" path="res://mm.tscn" id="1_elusx"]
 [ext_resource type="Animation" uid="uid://datfuwfou8or5" path="res://walk.res" id="2_bny3f"]
 [ext_resource type="Script" path="res://character_body_3d.gd" id="3_1awc4"]
 [ext_resource type="Animation" uid="uid://b7bcec6e2w1to" path="res://jump.res" id="4_f6fw2"]
+[ext_resource type="Animation" uid="uid://btvkovq6vo711" path="res://strafe_left.res" id="4_tbiw1"]
+[ext_resource type="Animation" uid="uid://gt1jgn6cjk3f" path="res://strafe_right.res" id="5_n1ydg"]
+[ext_resource type="PackedScene" uid="uid://cbmdsqfg8usab" path="res://indicator.tscn" id="6_2lt5l"]
+
+[sub_resource type="Animation" id="Animation_d4hcb"]
+length = 0.001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6k6ma"]
+_data = {
+"RESET": SubResource("Animation_d4hcb")
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gh8gj"]
+_data = {
+"idle": ExtResource("1_8w7mx"),
+"jump": ExtResource("4_f6fw2"),
+"strafe_left": ExtResource("4_tbiw1"),
+"strafe_right": ExtResource("5_n1ydg"),
+"walk": ExtResource("2_bny3f")
+}
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_0htuu"]
 
@@ -220,21 +240,6 @@ _surfaces = [{
 }]
 blend_shape_mode = 0
 
-[sub_resource type="Animation" id="Animation_d4hcb"]
-length = 0.001
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_6k6ma"]
-_data = {
-"RESET": SubResource("Animation_d4hcb")
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_gh8gj"]
-_data = {
-"idle": ExtResource("1_8w7mx"),
-"jump": ExtResource("4_f6fw2"),
-"walk": ExtResource("2_bny3f")
-}
-
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ydo8e"]
 
 [sub_resource type="Sky" id="Sky_biidu"]
@@ -244,16 +249,14 @@ sky_material = SubResource("ProceduralSkyMaterial_ydo8e")
 background_mode = 2
 sky = SubResource("Sky_biidu")
 
-[sub_resource type="Curve3D" id="Curve3D_ntlsr"]
-_data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -31, 1.7, 72),
-"tilts": PackedFloat32Array(0)
-}
-point_count = 1
-
 [node name="Node3D" type="Node3D"]
 
-[node name="Control" parent="." instance=ExtResource("1_elusx")]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../CharacterBody3D/Zephyr")
+libraries = {
+"": SubResource("AnimationLibrary_6k6ma"),
+"anims": SubResource("AnimationLibrary_gh8gj")
+}
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1000, 0, 0, 0, 1000, 0, 0, 0, 1000, 0, -1.01782, 0.0427246)
@@ -278,7 +281,7 @@ bones/0/name = "mixamorig_Hips"
 bones/0/parent = -1
 bones/0/rest = Transform3D(1, -8.72665e-05, -3.49066e-06, 8.72665e-05, 1, -3.04617e-10, 3.49066e-06, 0, 1, -6.75701e-08, 0.997919, 4.84474e-07)
 bones/0/enabled = true
-bones/0/position = Vector3(0.00261682, 0.98996, -0.00126343)
+bones/0/position = Vector3(0.00262298, 0.989989, -0.00126005)
 bones/0/rotation = Quaternion(-0.0313076, -0.0465364, -0.0290245, 0.998004)
 bones/0/scale = Vector3(1, 1, 1)
 bones/1/name = "mixamorig_Spine"
@@ -738,12 +741,6 @@ skin = SubResource("Skin_60pib")
 mesh = SubResource("ArrayMesh_j15ie")
 skin = SubResource("Skin_60pib")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody3D/Zephyr"]
-libraries = {
-"": SubResource("AnimationLibrary_6k6ma"),
-"anims": SubResource("AnimationLibrary_gh8gj")
-}
-
 [node name="CSGBox3D2" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -31.6965, 1.76204, 72.9446)
 use_collision = true
@@ -754,6 +751,6 @@ environment = SubResource("Environment_ogwa1")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.756778, 0.653672, 0, -0.653672, 0.756778, -33.5021, 14.6498, 75.628)
 
-[node name="Path3D" type="Path3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.1728, 1.36492, 72.3228)
-curve = SubResource("Curve3D_ntlsr")
+[node name="Control" parent="." instance=ExtResource("1_elusx")]
+
+[node name="Indicator" parent="." instance=ExtResource("6_2lt5l")]
